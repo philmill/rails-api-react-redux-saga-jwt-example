@@ -5,7 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-ideas = Idea.create(
+Idea.create(
     [
       {
         title: "A new cake recipe",
@@ -24,3 +24,5 @@ ideas = Idea.create(
         body: "Like Uno but involves drinking"
       }
     ])
+
+User.create({email: 'phil@philmill.net', password: 'helloPhil', password_confirmation: 'helloPhil' })    
