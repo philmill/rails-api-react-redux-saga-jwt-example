@@ -35,11 +35,12 @@
 
 .newIdeaButton {
   margin-top: 1rem;
-  background: darkblue;
+  background: #64dbfa;
   border-radius: 8px 8px;
-  color: white;
+  color: #282c34;
   border: none;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   padding: 0.7rem;
   outline: none;
