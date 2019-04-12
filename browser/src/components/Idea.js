@@ -1,5 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import axios from 'axios';
+
+import { InitialIdeaId } from '../App';
+
+const IdeaText = ({ idea }) => {
+  if (idea.id === InitialIdeaId) {
+    return (
+      <h4>Unsaved Changes</h4>
+    );
+  } else {
+    return (
+      <Fragment>
+        <h4>{idea.title}</h4>
+        <p>{idea.body}</p>
+      </Fragment>
+    );
+  }
+}
 
 class Idea extends Component {
   constructor(props) {
@@ -11,16 +28,26 @@ class Idea extends Component {
   }
 
   handleUpdate = () => {
+    // conditionally POST or PUT based on prop idea id
     const idea = {
+      id: this.props.idea.id,
       title: this.state.title,
       body: this.state.body,
     };
 
-    axios.put(`/api/v1/ideas/${this.props.idea.id}`, {
-      idea
-    })
-      .then(response => this.props.updateIdea(response.data))
-      .catch(error => console.log(error));
+    if (idea.id === InitialIdeaId) {
+      // this will POST with id param that will be filtered out by Rails
+      // the original id is needed in the updateIdea callback to determine how to update app state
+      axios.post('/api/v1/ideas', { idea })
+        .then(response => this.props.updateIdea({ idea: response.data, id: idea.id }))
+        .catch(error => console.log(error));
+    } else {
+      axios.put(`/api/v1/ideas/${idea.id}`, {
+        idea
+      })
+        .then(response => this.props.updateIdea({ idea: response.data, id: idea.id }))
+        .catch(error => console.log(error));
+    }
   }
 
   handleInput = (e) => {
@@ -37,6 +64,8 @@ class Idea extends Component {
 
   render() {
     const { idea, isForm } = this.props;
+    const btnLabel = idea.id === InitialIdeaId ? 'Create' : 'Update';
+
     if (isForm) {
       return (
         <div className="tile">
@@ -52,15 +81,14 @@ class Idea extends Component {
               onChange={this.handleInput}
             />
           </form>
-          <button onClick={this.handleUpdate}>Update</button>
+          <button onClick={this.handleUpdate}>{btnLabel}</button>
         </div>
       )
     } else {
       return (
-        <div className="tile" key={idea.id} onClick={this.handleClick}>
+        <div className="tile" onClick={this.handleClick}>
           <span className="deleteBtn" onClick={this.handleDelete}>X</span>
-          <h4>{idea.title}</h4>
-          <p>{idea.body}</p>
+          <IdeaText idea={idea} />
         </div>
       );
     }

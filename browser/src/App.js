@@ -4,6 +4,8 @@ import logo from './logo.svg';
 import './App.css';
 import Idea from './components/Idea';
 
+export const InitialIdeaId = 'INIT';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -20,22 +22,18 @@ class App extends Component {
   }
 
   handleNewIdea = () => {
-    axios.post('/api/v1/ideas', {
-      idea: {
-        title: '',
-        body: ''
-      }
-    })
-      .then(response => this.setState((state) => ({
-        ideas: [response.data, ...state.ideas],
-        editingId: response.data.id,
-      })))
-      .catch(error => console.log(error));
+    // create new idea in state, set editingId to something specific, only create if that id isn't found
+    if (!this.state.ideas.some(idea => idea.id === InitialIdeaId)) {
+      this.setState((state) => ({
+        ideas: [{ id: InitialIdeaId, title: '', body: '' }, ...state.ideas],
+        editingId: InitialIdeaId,
+      }))
+    }
   }
 
-  updateIdea = (idea) => {
+  updateIdea = ({ idea, id }) => {
     this.setState((state) => {
-      const ideaIndex = state.ideas.findIndex(i => i.id === idea.id);
+      const ideaIndex = state.ideas.findIndex(i => i.id === id);
       return {
         ideas: [...state.ideas.slice(0, ideaIndex), idea, ...state.ideas.slice(ideaIndex + 1)],
         editingId: null,
@@ -48,14 +46,24 @@ class App extends Component {
   }
 
   handleDeleteClick = (id) => {
-    axios.delete(`/api/v1/ideas/${id}`)
-      .then(() => this.setState((state) => {
+    // initial ideas can be removed from state directly
+    if (id === InitialIdeaId) {
+      this.setState((state) => {
         const ideaIndex = state.ideas.findIndex(i => i.id === id);
         return {
           ideas: [...state.ideas.slice(0, ideaIndex), ...state.ideas.slice(ideaIndex + 1)]
         };
-      }))
-      .catch(error => console.log(error));
+      })
+    } else {
+      axios.delete(`/api/v1/ideas/${id}`)
+        .then(() => this.setState((state) => {
+          const ideaIndex = state.ideas.findIndex(i => i.id === id);
+          return {
+            ideas: [...state.ideas.slice(0, ideaIndex), ...state.ideas.slice(ideaIndex + 1)]
+          };
+        }))
+        .catch(error => console.log(error));
+    }
   }
 
   render() {
