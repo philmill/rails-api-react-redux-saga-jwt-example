@@ -18,7 +18,7 @@ class ApplicationController < ActionController::API
   private
 
   def token
-    request.authorization
+    request.authorization.scan(/Bearer (.*)$/).flatten.last
   end
 
   def auth
