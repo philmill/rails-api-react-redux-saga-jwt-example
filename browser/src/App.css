@@ -33,8 +33,7 @@
   }
 }
 
-.newIdeaButton {
-  margin-top: 1rem;
+.baseBtn {
   background: #64dbfa;
   border-radius: 8px 8px;
   color: #282c34;
@@ -44,6 +43,10 @@
   cursor: pointer;
   padding: 0.7rem;
   outline: none;
+}
+
+.newIdeaButton {
+  margin-top: 1rem;
 }
 
 .section {
@@ -64,7 +67,7 @@
 }
 
 .input {
-  border: 0;
+  border: 1px white solid;
   background: none;
   outline: none;
   margin-top:10px;
