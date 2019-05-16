@@ -28,3 +28,7 @@
 
 # secrets
 /config/secrets.yml
+
+# IDEs
+.idea/
+.vscode/
