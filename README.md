@@ -6,6 +6,7 @@
 ## Rails Setup
 * `bundle`
 * `rake db:setup`
+* `EDITOR=nano rails credentials:edit` or whatever editor and save no modification needed
 * `rails s -p=3001` need to specify port since React will use 3000
 
 ## React Setup
