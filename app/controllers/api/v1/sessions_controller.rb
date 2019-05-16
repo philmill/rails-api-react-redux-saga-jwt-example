@@ -4,7 +4,7 @@ class Api::V1::SessionsController < ApplicationController
   def create
     user = User.find_by(email: auth_params[:email])
     if user.authenticate(auth_params[:password])
-      jwt = Auth.issue({user: user.id})
+      jwt = Auth.issue({userId: user.id})
       render json: {jwt: jwt}
     else
       render json: {error: "Could authenticate."}, status: 500
