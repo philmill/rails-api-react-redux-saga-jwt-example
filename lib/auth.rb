@@ -19,7 +19,7 @@ class Auth
   end
 
   def self.auth_secret
-    ENV['SECRET_JWT_BASE']
+    # https://medium.com/cedarcode/rails-5-2-credentials-9b3324851336
+    Rails.application.credentials.secret_key_base
   end
-
 end
